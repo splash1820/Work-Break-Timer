@@ -7,7 +7,6 @@
     <title>Work and Break Timer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/manifest.json">
-
 </head>
 <body>
     <div class="container">
@@ -26,10 +25,9 @@
         </div>
 
         <div class="timer" id="timerDisplay">00:00</div>
-      <div class="status">
-          <h3 id="statusDisplay">Status: Not Started</h3>
-      </div>
-
+        <div class="status">
+            <h3 id="statusDisplay">Status: Not Started</h3>
+        </div>
         
         <div class="sessions">
             <h3>Sessions Completed: <span id="sessionCount">0</span></h3>
@@ -40,18 +38,5 @@
     </div>
     
     <script src="script.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/pwabuilder-sw.js')
-            .then((registration) => {
-              console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch((error) => {
-              console.log('Service Worker registration failed:', error);
-            });
-        });
-      }
-    </script>
 </body>
 </html>

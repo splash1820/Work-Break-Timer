@@ -1,9 +1,10 @@
 let workTime = 0;
 let breakTime = 0;
-let endTime = null;
 let isWorkTime = true;
 let sessionCount = 0;
-let timer;
+
+const worker = new Worker('timerWorker.js'); // Initialize Web Worker
+let timerPaused = false; // Track if the timer is paused due to tab visibility
 
 function startTimer() {
     const workInput = document.getElementById("workTime").value;
@@ -14,72 +15,54 @@ function startTimer() {
         return;
     }
 
-    workTime = parseInt(workInput) * 60; // Convert minutes to seconds
+    workTime = parseInt(workInput) * 60;
     breakTime = parseInt(breakInput) * 60;
     sessionCount = 0;
 
-    if (!timer) {
-        endTime = Date.now() + workTime * 1000;
-        runTimer();
-    }
+    startCountdown(workTime);
 }
 
-function runTimer() {
+function startCountdown(seconds) {
     const display = document.getElementById("timerDisplay");
     const statusDisplay = document.getElementById("statusDisplay");
     const sessionDisplay = document.getElementById("sessionCount");
 
-    function updateTimer() {
-        const now = Date.now();
-        const secondsLeft = Math.max(Math.round((endTime - now) / 1000), 0);
-
-        const minutes = Math.floor(secondsLeft / 60);
-        const remainingSeconds = secondsLeft % 60;
-        display.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-
-        if (secondsLeft <= 0) {
-            clearInterval(timer);
-            playAlarm();
-
-            // Toggle between work and break time
-            if (isWorkTime) {
-                sessionCount++;
-                sessionDisplay.textContent = sessionCount;
-                endTime = Date.now() + breakTime * 1000;
-            } else {
-                endTime = Date.now() + workTime * 1000;
-            }
-
-            isWorkTime = !isWorkTime;
-
-            // Update status
-            statusDisplay.textContent = isWorkTime ? "Status: Working Time" : "Status: Break Time";
-
-            runTimer(); // Start the next cycle
-        }
-    }
-
-    // Update status display at the start
     statusDisplay.textContent = isWorkTime ? "Status: Working Time" : "Status: Break Time";
 
-    // Start the interval
-    timer = setInterval(updateTimer, 1000);
+    worker.postMessage({ action: 'start', duration: seconds });
 
-    // Run the update immediately to avoid a delay
-    updateTimer();
+    worker.onmessage = (e) => {
+        const remaining = e.data;
+        if (remaining > 0) {
+            const minutes = Math.floor(remaining / 60);
+            const remainingSeconds = remaining % 60;
+            display.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        } else {
+            playAlarm();
+            toggleTimer();
+        }
+    };
+}
+
+function toggleTimer() {
+    isWorkTime = !isWorkTime;
+    const sessionDisplay = document.getElementById("sessionCount");
+    if (!isWorkTime) sessionCount++;
+    sessionDisplay.textContent = sessionCount;
+    startCountdown(isWorkTime ? workTime : breakTime);
 }
 
 function stopTimer() {
-    clearInterval(timer);
-    timer = null;
+    worker.postMessage({ action: 'stop' });
 }
 
 function resetTimer() {
     stopTimer();
     document.getElementById("timerDisplay").textContent = "00:00";
-    document.getElementById("sessionCount").textContent = 0;
     document.getElementById("statusDisplay").textContent = "Status: Not Started";
+    document.getElementById("sessionCount").textContent = 0;
     sessionCount = 0;
+    isWorkTime = true;
 }
 
 function playAlarm() {
@@ -88,3 +71,14 @@ function playAlarm() {
         alert("Unable to play alarm sound. Please enable audio in your browser.");
     });
 }
+
+// Handle Page Visibility API
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        stopTimer();
+        timerPaused = true;
+    } else if (timerPaused) {
+        timerPaused = false;
+        startTimer();
+    }
+});
