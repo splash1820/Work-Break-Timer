@@ -1,0 +1,98 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: white; /* Keep the main background clean and minimal */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Container Styling */
+.container {
+  width: 90%;
+  max-width: 400px;
+  background: linear-gradient(to bottom, #ffed91, #ffae42, #87ceeb); /* Gradient inside container */
+  padding: 20px;
+  border-radius: 15px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  text-align: center;
+  border: 2px solid #0066cc; /* Subtle blue border */
+}
+
+/* Header */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #0066cc; /* Contrast text color for readability */
+}
+
+/* Labels */
+label {
+  font-size: 16px;
+  margin: 10px 0 5px 0;
+  display: block;
+  color: #333;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included in the width */
+  padding-right: 20px; /* Adds space between the text and right edge */
+}
+
+
+/* Buttons */
+.buttons button {
+  background: #ff6f00; /* Vibrant orange */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.buttons button:hover {
+  background: #e65c00; /* Darker orange on hover */
+}
+
+/* Timer Display */
+.timer {
+  font-size: 48px;
+  color: #333; /* Neutral text color for contrast */
+  margin: 20px 0;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white for timer */
+  border: 2px solid #0066cc; /* Blue border */
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* Status Display */
+.status {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333; /* Neutral color */
+}
+
+/* Session Count */
+.sessions {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #333;
+}

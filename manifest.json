@@ -1,0 +1,16 @@
+{
+  "name": "Work Break Timer",
+  "short_name": "Timer",
+  "description": "A simple timer to manage working and break times.",
+  "start_url": "/Work-Break-Timer/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "icons": [
+      {
+          "src": "/Work-Break-Timer/W&BTicon.jpg",
+          "sizes": "192x192",
+          "type": "image/jpg"
+      }
+  ]
+}
