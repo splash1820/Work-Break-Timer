@@ -6,6 +6,30 @@ let sessionCount = 0;
 const worker = new Worker('timerWorker.js'); // Initialize Web Worker
 let timerPaused = false; // Track if the timer is paused due to tab visibility
 
+// Load preferences when the app starts
+window.onload = () => {
+    const savedWorkTime = localStorage.getItem('workTime');
+    const savedBreakTime = localStorage.getItem('breakTime');
+
+    if (savedWorkTime) {
+        document.getElementById("workTime").value = savedWorkTime;
+    }
+
+    if (savedBreakTime) {
+        document.getElementById("breakTime").value = savedBreakTime;
+    }
+};
+
+function savePreferences() {
+    const workInput = document.getElementById("workTime").value;
+    const breakInput = document.getElementById("breakTime").value;
+
+    if (workInput && breakInput && workInput > 0 && breakInput > 0) {
+        localStorage.setItem('workTime', workInput);
+        localStorage.setItem('breakTime', breakInput);
+    }
+}
+
 function startTimer() {
     const workInput = document.getElementById("workTime").value;
     const breakInput = document.getElementById("breakTime").value;
@@ -14,6 +38,8 @@ function startTimer() {
         alert("Please enter valid work and break times.");
         return;
     }
+
+    savePreferences(); // Save the user's preferences
 
     workTime = parseInt(workInput) * 60;
     breakTime = parseInt(breakInput) * 60;
